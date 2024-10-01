@@ -54,6 +54,8 @@ const SalesRep = () => {
   };
 
   const startListening = async () => {
+    if (typeof window !== "undefined") {
+
     if (isListening) return;
 
     try {
@@ -84,7 +86,7 @@ const SalesRep = () => {
       console.error('Error initializing Symbl:', error);
       setError('Failed to establish a connection to Symbl. Please try again.');
     }
-  };
+  }};
 
   const stopListening = async () => {
     if (!isListening) return;
