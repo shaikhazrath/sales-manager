@@ -1,7 +1,7 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { Pinecone } from '@pinecone-database/pinecone';
 
-const apiKey = process.env.NEXT_PUBLIC_GEMINI_API_KEY;
+const apiKey = 'AIzaSyA594S9gDTZTJZBzeN6Y8mbjblvFCFZhUI';
 const genAI = new GoogleGenerativeAI(apiKey);
 const pc = new Pinecone({
      apiKey: '7de18ffb-6a70-4108-ae77-a0496b8a1341'
