@@ -5,10 +5,10 @@ import fs from 'fs/promises';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
 const pc = new Pinecone({
-    apiKey: '7de18ffb-6a70-4108-ae77-a0496b8a1341'
+    apiKey: process.env.NEXT_PUBLIC_Pinecone_API_KEY
 });
 
-const genAI = new GoogleGenerativeAI('AIzaSyA594S9gDTZTJZBzeN6Y8mbjblvFCFZhUI');
+const genAI = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GEMINI_API_KEY);
 
 function chunkTranscript(transcript, chunkSize = 1000) {
     const chunks = [];
