@@ -4,7 +4,7 @@ import { Pinecone } from '@pinecone-database/pinecone';
 const apiKey = process.env.NEXT_PUBLIC_GEMINI_API_KEY;
 const genAI = new GoogleGenerativeAI(apiKey);
 const pc = new Pinecone({
-  apiKey: process.env.NEXT_PUBLIC_PINECONE_API_KEY
+     apiKey: '7de18ffb-6a70-4108-ae77-a0496b8a1341'
 });
 
 async function generateEmbeddings(text) {
