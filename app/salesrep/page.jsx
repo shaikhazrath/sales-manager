@@ -5,7 +5,7 @@ import SalesRep from '../components/SalesRep';
 import { Input } from '@/components/ui/input';
 import ShinyButton from '@/components/ui/shiny-button';
 import ShimmerButton from '@/components/ui/shimmer-button';
-const page = () => {
+const Page = () => {
     const [loading, setLoading] = useState(false)
 
     const [url, seturl] = useState('')
@@ -69,4 +69,4 @@ const page = () => {
     )
 }
 
-export default page
+export default Page
