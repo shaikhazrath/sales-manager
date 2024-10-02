@@ -1,4 +1,4 @@
-import puppeteer from "puppeteer";
+import { JSDOM } from 'jsdom';
 import { Pinecone } from '@pinecone-database/pinecone';
 import { v4 as uuidv4 } from 'uuid';
 import fs from 'fs/promises';
@@ -16,19 +16,19 @@ function chunkTranscript(transcript, chunkSize = 1000) {
       chunks.push(transcript.slice(i, i + chunkSize));
     }
     return chunks;
-  }
-  
-  async function generateEmbeddings(text) {
+}
+
+async function generateEmbeddings(text) {
     const model = genAI.getGenerativeModel({ model: "embedding-001" });
     const result = await model.embedContent(text);
     return result.embedding;
-  }
-  
-  async function storeTranscriptInPinecone(transcript) {
+}
+
+async function storeTranscriptInPinecone(transcript) {
     const transcriptId = uuidv4();
     const chunks = chunkTranscript(transcript);
     const index = pc.index('cm');
-  
+
     const batchSize = 100; 
     for (let i = 0; i < chunks.length; i += batchSize) {
       const batch = await Promise.all(
@@ -46,17 +46,17 @@ function chunkTranscript(transcript, chunkSize = 1000) {
           };
         })
       );
-  
+
       await index.namespace(transcriptId).upsert(batch);
       console.log(`Stored batch ${i / batchSize + 1} of ${Math.ceil(chunks.length / batchSize)}`);
     }
-  
+
     console.log(`Stored transcript with ID: ${transcriptId}`);
     return transcriptId;
-  }
+}
 
 const visitedUrls = new Set();
-let textData = ''
+let textData = '';
 
 const skipKeywords = ['login', 'signup', 'auth', 'password-reset'];
 
@@ -70,7 +70,7 @@ function isSameDomain(url, baseUrl) {
     return baseHostname === urlHostname;
 }
 
-async function scrapePage(url, browser, baseUrl) {
+async function scrapePage(url, baseUrl) {
     if (visitedUrls.has(url) || shouldSkipUrl(url) || !isSameDomain(url, baseUrl)) {
         return;
     }
@@ -78,40 +78,36 @@ async function scrapePage(url, browser, baseUrl) {
     visitedUrls.add(url);
     console.log(`Scraping ${url}`);
 
-    const page = await browser.newPage();
-
     try {
-        await page.goto(url, { waitUntil: 'networkidle2', timeout: 60000 });
+        const response = await fetch(url);
+        const html = await response.text();
 
-        const pageText = await page.evaluate(() => document.body.innerText);
-        textData =  textData+pageText
+        const dom = new JSDOM(html);
+        const { document } = dom.window;
 
-        const links = await page.evaluate(() =>
-            Array.from(document.querySelectorAll('a[href]'))
-                .map(link => link.href)
-                .filter(href => href.startsWith('http'))
-        );
+        const pageText = document.body.textContent || '';
+        textData = textData + pageText;
+
+        const links = Array.from(document.querySelectorAll('a[href]'))
+            .map(link => link.href)
+            .filter(href => href.startsWith('http'));
 
         for (const link of links) {
-            await scrapePage(link, browser, baseUrl);
+            await scrapePage(link, baseUrl);
         }
     } catch (error) {
         console.error(`Error scraping ${url}:`, error.message);
-    } finally {
-        await page.close();
     }
 }
 
 export async function POST(request) {
     try {
         const { url } = await request.json();
-        const browser = await puppeteer.launch();
         const startUrl = url;
 
-        await scrapePage(startUrl, browser, startUrl);
+        await scrapePage(startUrl, startUrl);
 
-        await browser.close();
-        console.log(textData)
+        console.log(textData);
         const transcriptId = await storeTranscriptInPinecone(textData);
 
         return new Response(JSON.stringify(transcriptId), { status: 200 });

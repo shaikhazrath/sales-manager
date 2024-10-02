@@ -19,6 +19,7 @@
     "framer-motion": "^11.9.0",
     "gemini-ai": "^2.2.1",
     "install": "^0.13.0",
+    "jsdom": "^25.0.1",
     "lucide-react": "^0.446.0",
     "next": "14.2.13",
     "npm": "^10.8.3",
