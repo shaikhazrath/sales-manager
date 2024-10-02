@@ -7,7 +7,6 @@ import { Input } from '@/components/ui/input';
 import ShinyButton from '@/components/ui/shiny-button';
 import ShimmerButton from '@/components/ui/shimmer-button';
 
-// Dynamically import the SalesRep component
 const SalesRep = dynamic(() => import('../components/SalesRep'), { ssr: false });
 
 const Page = () => {

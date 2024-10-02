@@ -111,7 +111,6 @@ const SalesRep = () => {
       <div className="mb-4 border-b pb-4">
         <h2 className="text-xl font-semibold mb-2">Transcript:</h2>
         <div className="space-y-4">
-          {/* User's message */}
           <div className="flex items-start">
             <div className="w-10 h-10 bg-blue-500 text-white rounded-full flex justify-center items-center mr-2">
               U
@@ -121,7 +120,6 @@ const SalesRep = () => {
             </div>
           </div>
 
-          {/* AI's response */}
           <div className="flex items-start justify-end">
             <div className="bg-gray-200 text-black p-3 rounded-lg shadow max-w-xs">
               <pre className="whitespace-pre-wrap">{aiRes}</pre>
@@ -133,7 +131,6 @@ const SalesRep = () => {
         </div>
       </div>
 
-      {/* Control Buttons */}
       <div className="mb-4 flex justify-center space-x-4">
         <button
           onClick={startListening}

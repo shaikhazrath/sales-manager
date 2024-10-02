@@ -19,7 +19,7 @@ export default function Home() {
       />
       <div className="flex flex-col justify-center items-center h-screen">
         <HyperText
-          className="text-6xl md:text-8xl font-bold text-black"
+          className="text-xl md:text-8xl font-bold text-black"
           text="The AI Sales Engineer"
         />
         <div className="z-10 flex min-h-64 items-center justify-center">
