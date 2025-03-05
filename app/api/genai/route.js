@@ -1,10 +1,10 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { Pinecone } from '@pinecone-database/pinecone';
 
-const apiKey = 'AIzaSyA594S9gDTZTJZBzeN6Y8mbjblvFCFZhUI';
+const apiKey = 'AIzaSyC449GmuXR5ongxeePmqZJ7BUxAbb28fQw';
 const genAI = new GoogleGenerativeAI(apiKey);
 const pc = new Pinecone({
-     apiKey: '7de18ffb-6a70-4108-ae77-a0496b8a1341'
+     apiKey: 'pcsk_3F3uHz_FSL1katfpjvPn3MvsWKmM8onPh1wbeeg3m2fqFSYehrvzeSaChDiwvyf9MHiXia'
 });
 
 async function generateEmbeddings(text) {
@@ -18,7 +18,7 @@ async function generateEmbeddings(text) {
 
 async function geminiAi(conv, namespaceid) {
   try {
-    const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 
     const queryEmbedding = await generateEmbeddings(conv);
     const searchResults = await pc.index('cm').namespace(namespaceid).query({
@@ -31,14 +31,15 @@ async function geminiAi(conv, namespaceid) {
       const relevantContext = searchResults.matches.map(match => match.metadata.text).join(' ');
 
     const promptTemplate = `
-      As a sales representative, please answer the following question based on the provided context:
-
+      You was the owner of this site and the site complete context this this 
       Context:
       ${relevantContext}
 
+      answer this question based on this context 
+
       Question: ${conv}
 
-      Please provide a concise and relevant answer based on the given context and give me response in text format only.
+   
     `;
 
     const result = await model.generateContent(promptTemplate);
